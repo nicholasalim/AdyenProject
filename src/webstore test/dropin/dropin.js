@@ -77,7 +77,7 @@ getOriginKey().then(originKey => {
                                     dropin.setStatus('success');
                                     break;
                                 case 'Refused':
-                                    dropin.setStatus('error', { message: `Transaction has been refused\nReason : ${paymentStatusResponse.refusalReason}` });
+                                    dropin.setStatus('error', { message: `Transaction has been refused\nReason : ${action.refusalReason}` });
                                     break;
                                 case 'RedirectShopper':
                                     console.log(JSON.stringify(action));

@@ -3368,7 +3368,7 @@ u,
 
 @supports (--css: variables) {
     @media (min-width: 64rem) {
-        :root {
+         :root {
             --space-unit: 1.25em
         }
     }
@@ -3396,7 +3396,7 @@ u,
 
 @supports (--css: variables) {
     @media (min-width: 64rem) {
-        :root {
+         :root {
             --text-base-size: 1.25em;
             --text-scale-ratio: 1.25
         }

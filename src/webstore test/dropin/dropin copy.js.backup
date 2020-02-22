@@ -1,0 +1,78 @@
+let dropin = "";
+
+// 0. Get originKey
+getOriginKey().then(originKey => {
+    getPaymentMethods().then(paymentMethodsResponse => {
+        // 1. Create an instance of AdyenCheckout
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            originKey: originKey, // Mandatory. originKey from Costumer Area
+            paymentMethodsResponse,
+            removePaymentMethods: ['paysafecard', 'c_cash', 'sepadirectdebit']
+        });
+
+        // 2. Create and mount the Component
+        let dropin = checkout
+            .create('dropin', {
+                paymentMethodsConfiguration: {
+                    card: { // Example optional configuration for cards
+                        hasHolderName: true,
+                        holderNameRequired: true,
+                        enableStoreDetails: false,
+                        name: 'Credit or debit card'
+                    },
+                    ideal: {
+                        supportsRecurring: true,
+                        type: 'ideal'
+                    }
+
+                },
+                onSubmit: (state, component) => {
+                    // state.data;
+                    // state.isValid;
+                    makePayment(state.data).then(paymentStatusResponse => {
+                        //console.log(JSON.stringify(paymentStatusResponse));
+
+                        switch (paymentStatusResponse.resultCode) {
+                            case 'Authorised':
+                                dropin.setStatus('success');
+                                break;
+                            case 'Refused':
+                                dropin.setStatus('error', { message: `Transaction has been refused\nReason : ${paymentStatusResponse.refusalReason}` });
+                                break;
+                            default:
+                                break;
+                        }
+                    }).catch(error => {
+                        throw Error(error);
+                    });
+                    // console.log(JSON.stringify(paymentResponse));
+                    //dropin.handleAction(action);
+                    //dropin.setStatus(dropin, 'success');
+                },
+                onAdditionalDetails: (state, dropin) => {
+                    console.log(state);
+                    makeDetailsCall(state.data)
+                        // Your function calling your server to make a /payments/details request
+                        .then(action => {
+                            dropin.handleAction(action);
+                            // Drop-in handles the action object from the /payments/details response
+                        })
+                        .catch(error => {
+                            throw Error(error);
+                        });
+                }
+            })
+            .mount('#dropin-container');
+    });
+});
+
+function authoriseCheck(dropin, resultCode) {
+    console.log(resultCode);
+    if (resultCode === 'Refused') {
+        dropin.setStatus('error');
+    }
+    if (resultCode === 'success') {
+        dropin.setStatus('success');
+    }
+}

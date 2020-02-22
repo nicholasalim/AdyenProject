@@ -4,14 +4,14 @@ const responseContainer = document.querySelector('.response-container');
 
 // Demo - Update current component state container
 function updateStateContainer(newState) {
+    console.log(newState);
     stateContainer.innerText = JSON.stringify(newState, null, 2);
 }
 
 // Demo - Update request container
 function updateRequestContainer(response) {
     const defaultResponseParams = { merchantAccount: 'YOUR_MERCHANT_ACCOUNT' };
-    requestContainer.querySelector('pre').innerText = JSON.stringify(
-        { ...defaultResponseParams, ...response },
+    requestContainer.querySelector('pre').innerText = JSON.stringify({...defaultResponseParams, ...response },
         null,
         2
     );

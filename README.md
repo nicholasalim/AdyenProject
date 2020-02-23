@@ -7,7 +7,7 @@
 
 This project was build on Node JS, based on the sample provided by Adyen
 
-If preferred, you can run a Node.js server instead.
+To run the project, a Node.js server needs to be started.
 To do this, navigate to the root of the project, install the dependencies (only the first time) and run the start script:
 
 ```
